@@ -2,6 +2,7 @@ from bwpatcher.utils import patch_firmware
 from bwpatcher.modules import ALL_MODULES
 from io import BytesIO
 import streamlit as st
+from streamlit_scroll_to_top import scroll_to_here
 
 
 title = "Brightway Firmware Patcher"
@@ -11,6 +12,10 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
+if st.session_state.get("scroll_to_top", False):
+    st.session_state.scroll_to_top = False
+    scroll_to_here(0, key='top')
 
 # Custom CSS for cleaner styling
 st.markdown("""
@@ -81,7 +86,7 @@ if not st.session_state.disclaimer_accepted:
 
     ### 📄 Full Terms
 
-    See [LEGAL_DISCLAIMER.md](https://github.com/scooterteam/bw-flasher/blob/main/bw-patcher/LEGAL_DISCLAIMER.md)
+    See [LEGAL_DISCLAIMER.md](https://github.com/scooterteam/bw-flasher/blob/main/LEGAL_DISCLAIMER.md)
     and [PRINCIPLES.md](https://github.com/scooterteam/bw-flasher/blob/main/bw-patcher/PRINCIPLES.md) for complete terms.
 
     ---
@@ -103,6 +108,7 @@ if not st.session_state.disclaimer_accepted:
     with col2:
         if st.button("✅ I Understand & Accept All Risks", use_container_width=True, type="primary"):
             st.session_state.disclaimer_accepted = True
+            st.session_state.scroll_to_top = True
             st.rerun()
 
     st.stop()
@@ -114,7 +120,7 @@ st.caption("Research tool")
 # Collapsible reference to full disclaimer
 with st.expander("⚖️ View Legal Disclaimer Again"):
     st.markdown("""
-    See [LEGAL_DISCLAIMER.md](https://github.com/scooterteam/bw-flasher/blob/main/bw-patcher/LEGAL_DISCLAIMER.md)
+    See [LEGAL_DISCLAIMER.md](https://github.com/scooterteam/bw-flasher/blob/main/LEGAL_DISCLAIMER.md)
     for complete legal terms. By using this tool, you accept all risks and responsibilities.
     """)
 
@@ -189,6 +195,9 @@ else:
 if uploaded_file is not None and patches:
     if patches[-1] != "chk":
         patches.append("chk")
+
+    if scooter_model in ["mi5elite"]:
+        patches.append("img")
 
     # Process button
     if st.button("Apply Patches", type="primary", use_container_width=True):

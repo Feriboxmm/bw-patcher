@@ -13,6 +13,7 @@ capstone = "^4.0.2"
 crcmod = "^1.7"
 streamlit = "^1.40.1"
 setuptools = "^80.9.0"
+streamlit-scroll-to-top = "^0.0.4"
 
 [build-system]
 requires = ["poetry-core"]
